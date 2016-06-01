@@ -83,7 +83,7 @@ void Prac6_2::EDROOMBehaviour() {
 TEDROOMBool Prac6_2::EDROOMIsComponentFinished() {
 
 
-	return ( Server.EDROOMIsComponentFinished() && Client1.EDROOMIsComponentFinished() && Client2.EDROOMIsComponentFinished() && Client3.EDROOMIsComponentFinished() && Client4.EDROOMIsComponentFinished() && CEDROOMComponent::EDROOMIsComponentFinished());
+	return ( Client1.EDROOMIsComponentFinished() && Client2.EDROOMIsComponentFinished() && Client3.EDROOMIsComponentFinished() && Client4.EDROOMIsComponentFinished() && SuperServer.EDROOMIsComponentFinished() && Client5.EDROOMIsComponentFinished() && Client6.EDROOMIsComponentFinished() && Client7.EDROOMIsComponentFinished() && Client8.EDROOMIsComponentFinished() && CEDROOMComponent::EDROOMIsComponentFinished());
 
 }
 

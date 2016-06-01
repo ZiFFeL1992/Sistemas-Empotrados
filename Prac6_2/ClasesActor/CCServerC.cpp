@@ -11,8 +11,8 @@
 	// CONSTRUCTORS***********************************************
 
 CCServer::EDROOMTopContext::EDROOMTopContext (CCServer &act
-	, TEDROOMUInt8 & EDROOMpVarVresFreeNumber
 	, TEDROOMBool * EDROOMpVarVresFree
+	, TEDROOMUInt8 & EDROOMpVarVresFreeNumber
 	, CEDROOMPOOLTEDROOMUInt8 & EDROOMpPoolTEDROOMUInt8 ):
 
 	EDROOMcomponent(act)
@@ -23,8 +23,8 @@ CCServer::EDROOMTopContext::EDROOMTopContext (CCServer &act
 	,pService2(EDROOMcomponent.pService2)
 	,pService1(EDROOMcomponent.pService1)
 	, VresNumber ( 2 )
-	, VresFreeNumber ( EDROOMpVarVresFreeNumber )
 	, VresFree ( EDROOMpVarVresFree )
+	, VresFreeNumber ( EDROOMpVarVresFreeNumber )
 	, EDROOMPoolTEDROOMUInt8 ( EDROOMpPoolTEDROOMUInt8 )
  {
 
@@ -40,8 +40,8 @@ CCServer::EDROOMTopContext::EDROOMTopContext ( EDROOMTopContext &contex ):
 	,pService2(contex.pService2)
 	,pService1(contex.pService1)
 	, VresNumber ( 2 )
-	, VresFreeNumber ( contex.VresFreeNumber )
 	, VresFree ( contex.VresFree )
+	, VresFreeNumber ( contex.VresFreeNumber )
 	, EDROOMPoolTEDROOMUInt8 ( contex.EDROOMPoolTEDROOMUInt8 )
  {
 
@@ -78,10 +78,10 @@ void	CCServer::EDROOMTopContext::FAck()
                                              EDROOMPoolTEDROOMUInt8.AllocData();
 TEDROOMUInt8 resId=0;
 VresFreeNumber--;
-
+ 
 while((!VresFree[resId]) && (resId < (VresNumber -1)))
 	resId++;
-
+ 
 VresFree[resId]=false;
 *pSResAck_Data=resId;
    //Reply synchronous communication
@@ -96,17 +96,6 @@ void	CCServer::EDROOMTopContext::FFreeResource()
 
 VresFreeNumber++;
 
-}
-
-
-
-void	CCServer::EDROOMTopContext::FNack()
-
-{
-
- 
-   //Reply synchronous communication
-   Msg->reply(SResNack); 
 }
 
 
@@ -138,6 +127,17 @@ if(varSFreeRes<VresNumber){
 
 
 
+void	CCServer::EDROOMTopContext::FNack()
+
+{
+
+ 
+   //Reply synchronous communication
+   Msg->reply(SResNack); 
+}
+
+
+
 	//********************************** Pools *************************************
 
 	//CEDROOMPOOLTEDROOMUInt8
@@ -162,8 +162,8 @@ TEDROOMUInt8 *	CCServer::EDROOMTopContext::CEDROOMPOOLTEDROOMUInt8::AllocData(){
 
 CCServer::EDROOMTopState::EDROOMTopState (CCServer &act, CEDROOMMemory *pEDROOMMemory  ):
 	  EDROOMTopContext( act 
-		, VresFreeNumber
 		, VresFree
+		, VresFreeNumber
 		, EDROOMPoolTEDROOMUInt8 )
 	, VresFreeNumber ( 2 )
 	, EDROOMPoolTEDROOMUInt8 ( 10, pEDROOMMemory->poolTEDROOMUInt8, pEDROOMMemory->poolMarkTEDROOMUInt8)

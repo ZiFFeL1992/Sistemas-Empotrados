@@ -63,6 +63,35 @@ TEDROOMBool CCClient::EDROOMTopContext::EDROOMSearchContextTrans(TEDROOMTransId 
 
 	// User Defined Functions   ****************************
 
+void	CCClient::EDROOMTopContext::FFreeRes()
+
+{
+   //Allocate data from pool
+  TEDROOMUInt8 * pSFreeRes_Data = 
+                                             EDROOMPoolTEDROOMUInt8.AllocData();
+	
+		// Complete Data 
+	
+	*pSFreeRes_Data=VresId;
+   //Send message 
+   pServReq.send(SFreeRes, pSFreeRes_Data, &EDROOMPoolTEDROOMUInt8); 
+}
+
+
+
+void	CCClient::EDROOMTopContext::FGetResId()
+
+{
+   //Handle MsgBack->data
+  TEDROOMUInt8 & varSResAck = 
+                                                 *(TEDROOMUInt8 *)MsgBack->data;
+VresId = varSResAck;
+printf("%s Get ResId %i\n", EDROOMcomponent.EDROOMName, VresId);
+ 
+}
+
+
+
 void	CCClient::EDROOMTopContext::FProgRequest()
 
 {
@@ -118,35 +147,6 @@ TEDROOMBool	CCClient::EDROOMTopContext::GIsAck()
 
 return (MsgBack->signal==SResAck);
 
-}
-
-
-
-void	CCClient::EDROOMTopContext::FGetResId()
-
-{
-   //Handle MsgBack->data
-  TEDROOMUInt8 & varSResAck = 
-                                                 *(TEDROOMUInt8 *)MsgBack->data;
-VresId = varSResAck;
-printf("%s Get ResId %i\n", EDROOMcomponent.EDROOMName, VresId);
- 
-}
-
-
-
-void	CCClient::EDROOMTopContext::FFreeRes()
-
-{
-   //Allocate data from pool
-  TEDROOMUInt8 * pSFreeRes_Data = 
-                                             EDROOMPoolTEDROOMUInt8.AllocData();
-	
-		// Complete Data 
-	
-	*pSFreeRes_Data=VresId;
-   //Send message 
-   pServReq.send(SFreeRes, pSFreeRes_Data, &EDROOMPoolTEDROOMUInt8); 
 }
 
 
@@ -224,26 +224,6 @@ interval=Pr_Time(0, 100000); //100 ms
 
 
 
-void	CCClient::EDROOM_CTX_Working_3::FTryResConfig()
-
-{
-
-VresAttempts++;
-
-}
-
-
-
-TEDROOMBool	CCClient::EDROOM_CTX_Working_3::GResConfigOK()
-
-{
-
-return (VresAttempts>2);
-
-}
-
-
-
 void	CCClient::EDROOM_CTX_Working_3::FResConfigFail()
 
 {
@@ -260,6 +240,26 @@ void	CCClient::EDROOM_CTX_Working_3::FResConfigOK()
 
 printf ("%s Res %i Config OK\n", EDROOMcomponent.EDROOMName, (int) VresId);
 VresAttempts=0;
+
+}
+
+
+
+void	CCClient::EDROOM_CTX_Working_3::FTryResConfig()
+
+{
+
+VresAttempts++;
+
+}
+
+
+
+TEDROOMBool	CCClient::EDROOM_CTX_Working_3::GResConfigOK()
+
+{
+
+return (VresAttempts>2);
 
 }
 
