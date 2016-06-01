@@ -10,13 +10,17 @@
 
 	// CONSTRUCTORS***********************************************
 
-CCClient::EDROOMTopContext::EDROOMTopContext (CCClient &act ):
+CCClient::EDROOMTopContext::EDROOMTopContext (CCClient &act
+	, TEDROOMUInt8 & EDROOMpVarVresId
+	, CEDROOMPOOLTEDROOMUInt8 & EDROOMpPoolTEDROOMUInt8 ):
 
 	EDROOMcomponent(act)
 	,Msg(EDROOMcomponent.Msg)
 	,MsgBack(EDROOMcomponent.MsgBack)
 	,pServReq(EDROOMcomponent.pServReq)
 	,Timer(EDROOMcomponent.Timer)
+	, VresId ( EDROOMpVarVresId )
+	, EDROOMPoolTEDROOMUInt8 ( EDROOMpPoolTEDROOMUInt8 )
  {
 
 }
@@ -28,6 +32,8 @@ CCClient::EDROOMTopContext::EDROOMTopContext ( EDROOMTopContext &contex ):
 	MsgBack(contex.MsgBack)
 	,pServReq(contex.pServReq)
 	,Timer(contex.Timer)
+	, VresId ( contex.VresId )
+	, EDROOMPoolTEDROOMUInt8 ( contex.EDROOMPoolTEDROOMUInt8 )
  {
 
 }
@@ -54,16 +60,6 @@ TEDROOMBool CCClient::EDROOMTopContext::EDROOMSearchContextTrans(TEDROOMTransId 
 }
 
 	// User Defined Functions   ****************************
-
-void	CCClient::EDROOMTopContext::FFreeRes()
-
-{
-
-   //Invoke synchronous communication 
-   MsgBack=pServReq.invoke(SResReq); 
-}
-
-
 
 void	CCClient::EDROOMTopContext::FProgRequest()
 
@@ -124,7 +120,44 @@ return (MsgBack->signal==SResAck);
 
 
 
+void	CCClient::EDROOMTopContext::FGetResId()
+
+{
+   //Handle MsgBack->data
+  TEDROOMUInt8 & varSResAck = 
+                                                 *(TEDROOMUInt8 *)MsgBack->data;
+VresId = varSResAck;
+printf("%s Get ResId %i\n", EDROOMcomponent.EDROOMName, VresId);
+ 
+}
+
+
+
+void	CCClient::EDROOMTopContext::FFreeRes()
+
+{
+   //Allocate data from pool
+  TEDROOMUInt8 * pSFreeRes_Data = 
+                                             EDROOMPoolTEDROOMUInt8.AllocData();
+	
+		// Complete Data 
+	
+	*pSFreeRes_Data=VresId;
+   //Send message 
+   pServReq.send(SFreeRes, pSFreeRes_Data, &EDROOMPoolTEDROOMUInt8); 
+}
+
+
+
 	//********************************** Pools *************************************
+
+	//CEDROOMPOOLTEDROOMUInt8
+
+CCClient::EDROOMTopContext::CEDROOMPOOLTEDROOMUInt8::CEDROOMPOOLTEDROOMUInt8(TEDROOMUInt32 elemCount, TEDROOMUInt8* pMem, TEDROOMBool * pMemMarks):CEDROOMProtectedMemoryPool(elemCount, pMem, pMemMarks, sizeof (TEDROOMUInt8)){;}
+
+TEDROOMUInt8 *	CCClient::EDROOMTopContext::CEDROOMPOOLTEDROOMUInt8::AllocData(){
+	return(TEDROOMUInt8*)CEDROOMProtectedMemoryPool::AllocData();
+}
 
 
 
@@ -138,8 +171,11 @@ return (MsgBack->signal==SResAck);
 
 	// CONSTRUCTOR*************************************************
 
-CCClient::EDROOMTopState::EDROOMTopState (CCClient &act ):
-	  EDROOMTopContext( act  )
+CCClient::EDROOMTopState::EDROOMTopState (CCClient &act, CEDROOMMemory *pEDROOMMemory  ):
+	  EDROOMTopContext( act 
+		, VresId
+		, EDROOMPoolTEDROOMUInt8 )
+	, EDROOMPoolTEDROOMUInt8 ( 10, pEDROOMMemory->poolTEDROOMUInt8, pEDROOMMemory->poolMarkTEDROOMUInt8)
 {
 
 }
@@ -165,19 +201,14 @@ void CCClient::EDROOMTopState::EDROOMBehaviour(){
 				//Next State is Idle
 				edroomNextState = Idle;
 				break;
-			//Next Transition is FreeRes
-			case(FreeRes):
-				//Invoke Synchronous Message 
-				FFreeRes();
-				//Next State is Idle
-				edroomNextState = Idle;
-				break;
 			//To Choice Point BranchTryAgain
 			case(TryAgain):
 				//Invoke Synchronous Message 
 				FResRequest();
 				//Evaluate Branch Ack
 				if( GIsAck() ){
+					//Msg->Data Handling 
+					FGetResId();
 
 				//Next Transition is TryAgain
 					edroomCurrentTrans.localId = TryAgain_Ack;
@@ -201,6 +232,8 @@ void CCClient::EDROOMTopState::EDROOMBehaviour(){
 				FResRequest();
 				//Evaluate Branch Ack
 				if( GIsAck() ){
+					//Msg->Data Handling 
+					FGetResId();
 
 				//Next Transition is ResReq
 					edroomCurrentTrans.localId = ResReq_Ack;
@@ -217,6 +250,13 @@ void CCClient::EDROOMTopState::EDROOMBehaviour(){
 				//Next State is Wait
 					edroomNextState = Wait;
 				 } 
+				break;
+			//Next Transition is FreeRes
+			case(FreeRes):
+				//Send Asynchronous Message 
+				FFreeRes();
+				//Next State is Idle
+				edroomNextState = Idle;
 				break;
 		}
 

@@ -18,7 +18,7 @@ CCServer::CCServer(TEDROOMComponentID id,TEDROOMUInt32 roomNumMaxMens, TEDROOMPr
 
 		// ***************	Top State  *****************
 
-		,edroomTopState(*this)
+		,edroomTopState(*this,pActorMemory)
 
 
 {

@@ -11,7 +11,9 @@
 	// CONSTRUCTORS***********************************************
 
 CCServer::EDROOMTopContext::EDROOMTopContext (CCServer &act
-	, TEDROOMUInt8 & EDROOMpVarVresFreeNumber ):
+	, TEDROOMUInt8 & EDROOMpVarVresFreeNumber
+	, TEDROOMBool * EDROOMpVarVresFree
+	, CEDROOMPOOLTEDROOMUInt8 & EDROOMpPoolTEDROOMUInt8 ):
 
 	EDROOMcomponent(act)
 	,Msg(EDROOMcomponent.Msg)
@@ -20,7 +22,10 @@ CCServer::EDROOMTopContext::EDROOMTopContext (CCServer &act
 	,pService3(EDROOMcomponent.pService3)
 	,pService2(EDROOMcomponent.pService2)
 	,pService1(EDROOMcomponent.pService1)
+	, VresNumber ( 2 )
 	, VresFreeNumber ( EDROOMpVarVresFreeNumber )
+	, VresFree ( EDROOMpVarVresFree )
+	, EDROOMPoolTEDROOMUInt8 ( EDROOMpPoolTEDROOMUInt8 )
  {
 
 }
@@ -34,7 +39,10 @@ CCServer::EDROOMTopContext::EDROOMTopContext ( EDROOMTopContext &contex ):
 	,pService3(contex.pService3)
 	,pService2(contex.pService2)
 	,pService1(contex.pService1)
+	, VresNumber ( 2 )
 	, VresFreeNumber ( contex.VresFreeNumber )
+	, VresFree ( contex.VresFree )
+	, EDROOMPoolTEDROOMUInt8 ( contex.EDROOMPoolTEDROOMUInt8 )
  {
 
 }
@@ -65,10 +73,19 @@ TEDROOMBool CCServer::EDROOMTopContext::EDROOMSearchContextTrans(TEDROOMTransId 
 void	CCServer::EDROOMTopContext::FAck()
 
 {
-
+   //Allocate data from pool
+  TEDROOMUInt8 * pSResAck_Data = 
+                                             EDROOMPoolTEDROOMUInt8.AllocData();
+TEDROOMUInt8 resId=0;
 VresFreeNumber--;
+
+while((!VresFree[resId]) && (resId < (VresNumber -1)))
+	resId++;
+
+VresFree[resId]=false;
+*pSResAck_Data=resId;
    //Reply synchronous communication
-   Msg->reply(SResAck); 
+   Msg->reply(SResAck, pSResAck_Data, &EDROOMPoolTEDROOMUInt8); 
 }
 
 
@@ -94,7 +111,42 @@ void	CCServer::EDROOMTopContext::FNack()
 
 
 
+void	CCServer::EDROOMTopContext::FInit()
+
+{
+
+for(TEDROOMUInt8 i=0; i<VresNumber; i++){
+	VresFree[i]=true;
+}
+
+}
+
+
+
+void	CCServer::EDROOMTopContext::FMarkResource()
+
+{
+   //Handle Msg->data
+  TEDROOMUInt8 & varSFreeRes = 
+                                                     *(TEDROOMUInt8 *)Msg->data;
+if(varSFreeRes<VresNumber){
+	VresFree[varSFreeRes]=true;
+	printf("%s Free ResId %i\n", EDROOMcomponent.EDROOMName, (int)varSFreeRes);
+}
+
+}
+
+
+
 	//********************************** Pools *************************************
+
+	//CEDROOMPOOLTEDROOMUInt8
+
+CCServer::EDROOMTopContext::CEDROOMPOOLTEDROOMUInt8::CEDROOMPOOLTEDROOMUInt8(TEDROOMUInt32 elemCount, TEDROOMUInt8* pMem, TEDROOMBool * pMemMarks):CEDROOMProtectedMemoryPool(elemCount, pMem, pMemMarks, sizeof (TEDROOMUInt8)){;}
+
+TEDROOMUInt8 *	CCServer::EDROOMTopContext::CEDROOMPOOLTEDROOMUInt8::AllocData(){
+	return(TEDROOMUInt8*)CEDROOMProtectedMemoryPool::AllocData();
+}
 
 
 
@@ -108,10 +160,13 @@ void	CCServer::EDROOMTopContext::FNack()
 
 	// CONSTRUCTOR*************************************************
 
-CCServer::EDROOMTopState::EDROOMTopState (CCServer &act ):
+CCServer::EDROOMTopState::EDROOMTopState (CCServer &act, CEDROOMMemory *pEDROOMMemory  ):
 	  EDROOMTopContext( act 
-		, VresFreeNumber )
+		, VresFreeNumber
+		, VresFree
+		, EDROOMPoolTEDROOMUInt8 )
 	, VresFreeNumber ( 2 )
+	, EDROOMPoolTEDROOMUInt8 ( 10, pEDROOMMemory->poolTEDROOMUInt8, pEDROOMMemory->poolMarkTEDROOMUInt8)
 {
 
 }
@@ -134,11 +189,15 @@ void CCServer::EDROOMTopState::EDROOMBehaviour(){
 
 			//Next Transition is Init
 			case(Init):
+				//Execute Action 
+				FInit();
 				//Next State is Ready
 				edroomNextState = Ready;
 				break;
 			//Next Transition is FreeResource
 			case(FreeResource):
+				//Msg->Data Handling 
+				FMarkResource();
 				//Execute Action 
 				FFreeResource();
 				//Next State is Ready

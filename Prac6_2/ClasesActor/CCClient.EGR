@@ -6,7 +6,7 @@
 0
 [Modificado]
 0
-1
+0
 0
 [Estructura]
 [Version Estructura]
@@ -62,7 +62,12 @@ EDROOMTimingSAP
 3
 0
 [Pools]
+1
+[Version PoolDatosMens]
 0
+EDROOMPoolTEDROOMUInt8
+TEDROOMUInt8
+10
 [Modulos]
 0
 [Eventos]
@@ -178,10 +183,10 @@ GIsAck()
 Working
 DSubEst
 ;
+
  
- 
- 
-;
+
+FGetResId();
 ;
 ;
 [GraficoRama]
@@ -216,10 +221,10 @@ GIsAck()
 Working
 DSubEst
 ;
+
  
- 
- 
-;
+
+FGetResId();
 ;
 ;
 [GraficoRama]
@@ -252,28 +257,6 @@ true
 [Version GraficoTransicion]
 0
 109 124 210 435 0
-[FinGraficoTransicion]
-FreeRes
-Working
-OSubEst
-Idle
-DSubEst
-;
-[Trigger]
-Timer
-EDROOMSignalTimeout
-true
- 
- 
- 
-;
-;
-FFreeRes();
-0
-[GraficoTransicion]
-[Version GraficoTransicion]
-0
-515 312 333 434 2
 [FinGraficoTransicion]
 TryAgain
 Wait
@@ -319,27 +302,41 @@ FResRequest();
 0
 271 380 271 320 1
 [FinGraficoTransicion]
+FreeRes
+Working
+OSubEst
+Idle
+DSubEst
+;
+[Trigger]
+Timer
+EDROOMSignalTimeout
+true
+ 
+ 
+ 
+;
+FFreeRes();
+;
+0
+[GraficoTransicion]
+[Version GraficoTransicion]
+0
+515 312 333 427 2
+[FinGraficoTransicion]
 [VariablesConstantes]
+1
+[Version VariYConst]
+0
+VresId
+TEDROOMUInt8
+
+Variable
 0
 [Metodos]
-6
+7
 [Version Metodos]
 21
-InvokeMsg
-FFreeRes()
-0
-0
-0
-0
-1
- 
-0
-[ServiceRequest]
-invoke
-pServReq
-SResReq
-NULL
-EDROOMprioVeryHigh
 Inform
 FProgRequest()
 0
@@ -418,6 +415,43 @@ GIsAck()
  
 1
 return (MsgBack->signal==SResAck);
+MsgBackDataHandler
+FGetResId()
+0
+0
+0
+1
+#include <stdio.h>
+1
+
+2
+VresId = varSResAck;
+printf("%s Get ResId %i\n", EDROOMcomponent.EDROOMName, VresId);
+[ServiceRequest]
+MsgBack->data
+pServReq
+SResAck
+TEDROOMUInt8
+
+SendMsg
+FFreeRes()
+0
+0
+0
+0
+1
+
+4
+	
+		// Complete Data 
+	
+	*pSFreeRes_Data=VresId;
+[ServiceRequest]
+send
+pServReq
+SFreeRes
+TEDROOMUInt8
+EDROOMprioNormal
 [MaquinasSubEstados]
 0
 [FinMaquinasSubEstados]
