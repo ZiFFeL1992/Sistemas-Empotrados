@@ -5,8 +5,8 @@
 0
 0
 [Modificado]
-0
-0
+1
+1
 0
 [Estructura]
 [Version Estructura]
@@ -20,7 +20,7 @@ NULL
 1
 [FinStack]
 [Puertos]
-2
+3
 [Version Puerto]
 0
 pServReq
@@ -43,6 +43,17 @@ Timer
 28
 44
 EDROOMTimingSAP
+[Version Puerto]
+0
+ResConfigTimer
+0
+1
+1
+[Version Grafico Puerto]
+0
+28
+62
+EDROOMTimingSAP
 [FinPuertos]
 [ActoresComponente]
 0
@@ -51,7 +62,7 @@ EDROOMTimingSAP
 0
 [FinUniones]
 [NumTimers]
-2
+4
 [FinNumTimers]
 [NumMsgDef]
 10
@@ -71,11 +82,16 @@ TEDROOMUInt8
 [Modulos]
 0
 [Eventos]
-1
+2
 [Event]
 [Version]
 1
 EvTimerTimer
+Timer
+[Event]
+[Version]
+1
+EvTimerResConfigTimer
 Timer
 [Maquina de Estados]
 [Version Maquina de Estados]
@@ -453,7 +469,237 @@ SFreeRes
 TEDROOMUInt8
 EDROOMprioNormal
 [MaquinasSubEstados]
+1
+Working
+[Maquina de Estados]
+[Version Maquina de Estados]
+1
+Working
+Top
+[Subestados]
+2
+[Version SubEstados]
+3
+ResConfig
+FProgResConfig();
+;
+;
+;
+;
 0
+0
+[ObjetoGrafico]
+[Version Objeto Grafico]
+0
+237 176 193 79
+[FinObjetoGrafico]
+DoWork
+;
+;
+;
+;
+;
+0
+0
+[ObjetoGrafico]
+[Version Objeto Grafico]
+0
+414 422 165 80
+[FinObjetoGrafico]
+[PuntosEleccion]
+1
+[Version PuntosEleccion]
+2
+TryResConfig
+0
+[ObjetoGrafico]
+[Version Objeto Grafico]
+0
+199 396 35 35
+[FinObjetoGrafico]
+TryResConfig
+0
+[Ramas]
+2
+[Version Ramas]
+4
+ResConfigError
+true
+ResConfig
+DSubEst
+FResConfigFail();
+
+ 
+
+;
+;
+;
+[GraficoRama]
+[Version GraficoRama]
+0
+216 396 255 255 1
+[FinGraficoRama]
+ResConfigOK
+GResConfigOK()
+DoWork
+DSubEst
+FResConfigOK();
+
+ 
+
+;
+;
+;
+[GraficoRama]
+[Version GraficoRama]
+0
+230 420 414 457 0
+[FinGraficoRama]
+[Transiciones]
+3
+[Version Transicion]
+4
+ToResConfig
+TryAgain_Ack
+OPEntrada
+ResConfig
+DSubEst
+;
+[Trigger]
+Timer
+EDROOMSignalTimeout
+true
+ 
+ 
+ 
+;
+;
+;
+0
+[GraficoTransicion]
+[Version GraficoTransicion]
+0
+530 70 323 176 2
+[FinGraficoTransicion]
+TryResConfig
+ResConfig
+OSubEst
+TryResConfig
+DPEleccion
+FTryResConfig();
+[Trigger]
+ResConfigTimer
+EDROOMSignalTimeout
+true
+ 
+ 
+ 
+;
+;
+;
+0
+[GraficoTransicion]
+[Version GraficoTransicion]
+0
+403 255 228 402 2
+[FinGraficoTransicion]
+ToResConfig2
+ResReq_Ack
+OPEntrada
+ResConfig
+DSubEst
+;
+[Trigger]
+Timer
+EDROOMSignalTimeout
+true
+ 
+ 
+ 
+;
+;
+;
+0
+[GraficoTransicion]
+[Version GraficoTransicion]
+0
+47 305 237 225 1
+[FinGraficoTransicion]
+[VariablesConstantes]
+1
+[Version VariYConst]
+0
+VresAttempts
+TEDROOMUInt8
+0
+Variable
+0
+[Metodos]
+5
+[Version Metodos]
+21
+Inform
+FProgResConfig()
+0
+0
+0
+0
+1
+
+1
+interval=Pr_Time(0, 100000); //100 ms
+[ServiceRequest]
+InformIn
+ResConfigTimer
+EDROOMSignalTimeout
+TEDROOMUInt8
+EDROOMprioNormal
+BasicAction
+FTryResConfig()
+0
+0
+0
+0
+1
+
+1
+VresAttempts++;
+Guard
+GResConfigOK()
+0
+0
+0
+0
+1
+
+1
+return (VresAttempts>2);
+BasicAction
+FResConfigFail()
+0
+0
+0
+1
+#include <stdio.h>
+1
+
+1
+printf ("%s Res %i Config Fail\n", EDROOMcomponent.EDROOMName, (int) VresId);
+BasicAction
+FResConfigOK()
+0
+0
+0
+0
+1
+
+2
+printf ("%s Res %i Config OK\n", EDROOMcomponent.EDROOMName, (int) VresId);
+VresAttempts=0;
+[MaquinasSubEstados]
+0
+[FinMaquinasSubEstados]
+[Fin Maquina de Estados]
 [FinMaquinasSubEstados]
 [Fin Maquina de Estados]
 [FinComportamiento]

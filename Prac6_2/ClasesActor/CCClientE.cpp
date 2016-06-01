@@ -16,11 +16,12 @@ CCClient::CCClient(TEDROOMComponentID id,TEDROOMUInt32 roomNumMaxMens, TEDROOMPr
 
 		// *********** Timing service access point *********
 
-		,EDROOMtimingSAP(this, 3,&pActorMemory->TimingMemory)
+		,EDROOMtimingSAP(this, 5,&pActorMemory->TimingMemory)
 
 
 		// *******************  Timers  ********************
 
+		,ResConfigTimer(&EDROOMtimingSAP, 2 )
 		,Timer(&EDROOMtimingSAP, 2 )
 
 
@@ -116,7 +117,7 @@ void CCClient::CEDROOMMemory::SetMemory(TEDROOMUInt32 numMessages_
 		CEDROOMComponentMemory::SetMemory( numMessages_,MessagesMem_, MessagesMemMarks_
 			,numberOfNodes_,QueueNodesMem_, QueueNodesMemMarks_, QueueHeads);
 
-		TimingMemory.SetMemory(3,TimerInf,&TimerInfMarks[0],TimeOutMsgs,&TimeOutMsgsMarks[0]);
+		TimingMemory.SetMemory(5,TimerInf,&TimerInfMarks[0],TimeOutMsgs,&TimeOutMsgsMarks[0]);
 
 
 }

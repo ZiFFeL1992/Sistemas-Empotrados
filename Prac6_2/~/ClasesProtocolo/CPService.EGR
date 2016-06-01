@@ -4,7 +4,7 @@
 0
 0
 0
-1
+0
 2
 [Version Mensaje]
 1
@@ -26,9 +26,9 @@ SResReq
 SResAck
 [Version Dato]
 1
-NULL
+TEDROOMUInt8
 Z:\home\guille\Documents\Sistemas-Empotrados\Prac6_2\
-es.uah.aut.srg.edroom.mclev.data_sai.NULL
+es.uah.aut.srg.edroom.mclev.data_sai.TEDROOMUInt8
 v1
 2
 SResReq
@@ -40,9 +40,9 @@ SResReq
 SFreeRes
 [Version Dato]
 1
-NULL
+TEDROOMUInt8
 Z:\home\guille\Documents\Sistemas-Empotrados\Prac6_2\
-es.uah.aut.srg.edroom.mclev.data_sai.NULL
+es.uah.aut.srg.edroom.mclev.data_sai.TEDROOMUInt8
 v1
 0
 [Version Mensaje]

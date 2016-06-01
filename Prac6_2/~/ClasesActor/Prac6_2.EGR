@@ -5,8 +5,8 @@
 0
 0
 [Modificado]
-1
-1
+0
+0
 3
 [Estructura]
 [Version Estructura]
@@ -43,10 +43,10 @@ EDROOMprioNormal
 CCServer
 [Version Actor Componente]
 2
-Client
+Client1
 1
 0
-0
+-1
 10
 7
 EDROOMprioNormal
@@ -119,7 +119,7 @@ Union
 pService1
 pServReq
 Server
-Client
+Client1
 [Version Union]
 0
 Union2
