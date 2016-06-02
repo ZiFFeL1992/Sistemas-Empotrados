@@ -175,7 +175,7 @@ void	CAPathPlanner::EDROOMTopContext::FMaxSteps()
  
  print_char('\n');
  print_char('\r');
- print_string("MAX");
+ print_string("\tMAX");
  
  
 }

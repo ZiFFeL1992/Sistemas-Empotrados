@@ -102,6 +102,21 @@ void	CAPathTracker::EDROOMTopContext::FGoToPathStep()
 
 
 
+void	CAPathTracker::EDROOMTopContext::FProgFirstTrackStep()
+
+{
+   //Define interval
+  Pr_Time interval;
+	 
+	//Timing Service useful methods
+	 
+ interval = Pr_Time(0,10000); // interval of X sec + Y microsec
+   //Program relative timer 
+   Timer.InformIn( interval ); 
+}
+
+
+
 void	CAPathTracker::EDROOMTopContext::FProgNextTrackStep()
 
 {
@@ -163,21 +178,6 @@ TEDROOMBool	CAPathTracker::EDROOMTopContext::GLastStep()
  
 }
 
-}
-
-
-
-void	CAPathTracker::EDROOMTopContext::FProgFirstTrackStep()
-
-{
-   //Define interval
-  Pr_Time interval;
-	 
-	//Timing Service useful methods
-	 
- interval = Pr_Time(0,10000); // interval of X sec + Y microsec
-   //Program relative timer 
-   Timer.InformIn( interval ); 
 }
 
 

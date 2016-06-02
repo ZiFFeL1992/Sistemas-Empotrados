@@ -14,7 +14,7 @@ SStartPlanning
 [Version Dato]
 1
 NULL
-Z:\home\user\Desktop\Models\Prac7_Vehicle\
+Z:\home\guille\Documents\Sistemas-Empotrados\EDROOM\Prac7_Vehicle\
 es.uah.aut.srg.edroom.mclev.data_sai.NULL
 v1
 0
@@ -26,7 +26,7 @@ SNewTargetLocation
 [Version Dato]
 1
 CDLocation
-Z:\home\user\Desktop\Models\Prac7_Vehicle\
+Z:\home\guille\Documents\Sistemas-Empotrados\EDROOM\Prac7_Vehicle\
 iface
 v1
 0
@@ -38,7 +38,7 @@ SMarkObstacle
 [Version Dato]
 1
 CDLocation
-Z:\home\user\Desktop\Models\Prac7_Vehicle\
+Z:\home\guille\Documents\Sistemas-Empotrados\EDROOM\Prac7_Vehicle\
 iface
 v1
 0
@@ -50,7 +50,7 @@ SConfigPathPlanner
 [Version Dato]
 1
 CDLocation
-Z:\home\user\Desktop\Models\Prac7_Vehicle\
+Z:\home\guille\Documents\Sistemas-Empotrados\EDROOM\Prac7_Vehicle\
 iface
 v1
 1
@@ -63,7 +63,7 @@ SConfigOK
 [Version Dato]
 1
 NULL
-Z:\home\user\Desktop\Models\Prac7_Vehicle\
+Z:\home\guille\Documents\Sistemas-Empotrados\EDROOM\Prac7_Vehicle\
 es.uah.aut.srg.edroom.mclev.data_sai.NULL
 v1
 2
@@ -76,7 +76,7 @@ SConfigError
 [Version Dato]
 1
 NULL
-Z:\home\user\Desktop\Models\Prac7_Vehicle\
+Z:\home\guille\Documents\Sistemas-Empotrados\EDROOM\Prac7_Vehicle\
 es.uah.aut.srg.edroom.mclev.data_sai.NULL
 v1
 2

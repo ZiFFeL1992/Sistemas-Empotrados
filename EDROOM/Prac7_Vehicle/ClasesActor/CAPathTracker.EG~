@@ -23,25 +23,25 @@ NULL
 3
 [Version Puerto]
 0
-PathPlannerCtrl
+PathTrackerCtrl
 0
 1
 0
 [Version Grafico Puerto]
 0
-47
 4
-CPPathPlannerCtrl
+42
+CPPathTrackerCtrl
 [Version Puerto]
 0
 TrackPath
-1
+0
 1
 0
 [Version Grafico Puerto]
 0
-39
-93
+46
+4
 CPTrackPath
 [Version Puerto]
 0
@@ -51,8 +51,8 @@ Timer
 1
 [Version Grafico Puerto]
 0
-55
-37
+75
+40
 EDROOMTimingSAP
 [FinPuertos]
 [ActoresComponente]
@@ -73,33 +73,12 @@ EDROOMTimingSAP
 3
 0
 [Pools]
-1
-[Version PoolDatosMens]
 0
-EDROOMPoolCDPath
-CDPath
-3
 [Modulos]
-4
-[Version Modulo]
-1
-sensors_iface
- 
-v1
- 
-1
-1
+2
 [Version Modulo]
 1
 actuators_iface
- 
-v1
- 
-1
-1
-[Version Modulo]
-1
-planner_iface
  
 v1
  
@@ -126,7 +105,7 @@ Timer
 Top
 NULL
 [Subestados]
-4
+5
 [Version SubEstados]
 3
 I
@@ -153,9 +132,9 @@ Idle
 [ObjetoGrafico]
 [Version Objeto Grafico]
 0
-278 88 90 100
+158 197 157 67
 [FinObjetoGrafico]
-CalculatePath
+StandBy
 ;
 ;
 ;
@@ -166,12 +145,12 @@ CalculatePath
 [ObjetoGrafico]
 [Version Objeto Grafico]
 0
-298 255 223 121
+166 319 140 61
 [FinObjetoGrafico]
-CalNextPath
+TrackingPath
 ;
 ;
-FProgNextStep();
+;
 ;
 ;
 1
@@ -179,48 +158,83 @@ FProgNextStep();
 [ObjetoGrafico]
 [Version Objeto Grafico]
 0
-99 321 96 211
+175 460 129 146
+[FinObjetoGrafico]
+Pause
+;
+;
+;
+;
+;
+1
+0
+[ObjetoGrafico]
+[Version Objeto Grafico]
+0
+417 331 90 280
 [FinObjetoGrafico]
 [PuntosEleccion]
 2
 [Version PuntosEleccion]
 2
+PathStep
+0
+[ObjetoGrafico]
+[Version Objeto Grafico]
+0
+59 498 35 35
+[FinObjetoGrafico]
 Config
 0
 [ObjetoGrafico]
 [Version Objeto Grafico]
 0
-469 117 35 35
+221 72 35 35
 [FinObjetoGrafico]
-CalStep
-0
-[ObjetoGrafico]
-[Version Objeto Grafico]
-0
-391 436 35 35
-[FinObjetoGrafico]
-Config
+PathStep
 0
 [Ramas]
 2
 [Version Ramas]
 4
-Error
-VSimError
-Idle
+LastStep
+GLastStep()
+StandBy
 DSubEst
 ;
  
  
  
 ;
+FSendPathRequest();
 ;
-FReplySimError();
 [GraficoRama]
 [Version GraficoRama]
 0
-471 124 368 97 3
+76 498 184 380 1
 [FinGraficoRama]
+toNextStep
+true
+TrackingPath
+DSubEst
+FProgNextTrackStep();
+ 
+ 
+ 
+;
+;
+;
+[GraficoRama]
+[Version GraficoRama]
+0
+93 515 175 513 1
+[FinGraficoRama]
+Config
+0
+[Ramas]
+2
+[Version Ramas]
+4
 OK
 true
 Idle
@@ -231,68 +245,30 @@ DSubEst
  
 ;
 ;
-FReplyConfigOK();
+FReplyOK();
 [GraficoRama]
 [Version GraficoRama]
 0
-486 151 368 178 2
+221 89 171 197 2
 [FinGraficoRama]
-CalStep
-0
-[Ramas]
-3
-[Version Ramas]
-4
-SendMinPath
-GSendMinPath()
-CalculatePath
+Error
+VSimError
+Idle
 DSubEst
-FProgNextStep();
+FSimError();
  
  
  
 ;
-FSendNextPath();
 ;
+FReplySimError();
 [GraficoRama]
 [Version GraficoRama]
 0
-425 453 500 376 1
-[FinGraficoRama]
-NextStep
-true
-CalculatePath
-DSubEst
-FProgNextStep();
- 
- 
- 
-;
-;
-;
-[GraficoRama]
-[Version GraficoRama]
-0
-392 446 312 376 3
-[FinGraficoRama]
-MaxStep
-GMaxSteps()
-CalNextPath
-DSubEst
-FMaxSteps();
- 
- 
- 
-;
-;
-;
-[GraficoRama]
-[Version GraficoRama]
-0
-391 453 195 454 2
+255 89 299 197 0
 [FinGraficoRama]
 [Transiciones]
-7
+8
 [Version Transicion]
 4
 Init
@@ -315,36 +291,36 @@ true
 [GraficoTransicion]
 [Version GraficoTransicion]
 0
-115 120 278 127 0
+108 125 158 224 0
 [FinGraficoTransicion]
-Config
-Idle
+NewPath
+StandBy
 OSubEst
-Config
-DPEleccion
-FConfigPlanner();
+TrackingPath
+DSubEst
+FProgFirstTrackStep();
 [Trigger]
-PathPlannerCtrl
-SConfigPathPlanner
+TrackPath
+STrackPath
 true
  
  
  
+FGetNewPatch();
 ;
 ;
-;
-1
+0
 [GraficoTransicion]
 [Version GraficoTransicion]
 0
-368 147 470 142 1
+236 380 235 460 2
 [FinGraficoTransicion]
-CalStep
-CalculatePath
+PathStep
+TrackingPath
 OSubEst
-CalStep
+PathStep
 DPEleccion
-FCalPathStep();
+FGoToPathStep();
 [Trigger]
 Timer
 EDROOMSignalTimeout
@@ -359,17 +335,39 @@ true
 [GraficoTransicion]
 [Version GraficoTransicion]
 0
-409 376 408 436 2
+175 580 76 532 3
+[FinGraficoTransicion]
+Config
+Idle
+OSubEst
+Config
+DPEleccion
+;
+[Trigger]
+PathTrackerCtrl
+SConfigPathTracker
+true
+ 
+ 
+ 
+;
+;
+;
+1
+[GraficoTransicion]
+[Version GraficoTransicion]
+0
+237 197 238 106 1
 [FinGraficoTransicion]
 Start
 Idle
 OSubEst
-CalculatePath
+StandBy
 DSubEst
-FProgNextStep();
+;
 [Trigger]
-PathPlannerCtrl
-SStartPlanning
+PathTrackerCtrl
+SStartTracking
 true
  
  
@@ -381,224 +379,143 @@ true
 [GraficoTransicion]
 [Version GraficoTransicion]
 0
-319 188 403 255 0
+233 264 234 319 0
 [FinGraficoTransicion]
-NewTar
-EDROOMEdge
-OBorde
-CalculatePath
+StopTrack
+TrackingPath
+OSubEst
+Pause
 DSubEst
 ;
 [Trigger]
-PathPlannerCtrl
-SNewTargetLocation
+PathTrackerCtrl
+SStopTracking
 true
  
  
  
-FNewTarget();
+;
 ;
 ;
 0
 [GraficoTransicion]
 [Version GraficoTransicion]
 0
-695 296 521 295 3
+304 573 417 573 1
 [FinGraficoTransicion]
-PatRequest
-EDROOMEdge
-OBorde
-CalculatePath
+ResumePath
+Pause
+OSubEst
+TrackingPath
 DSubEst
 ;
 [Trigger]
 TrackPath
-SPathRequest
+STrackPath
 true
  
  
  
+FGetNewPatch();
 ;
-FSendNextPath();
 ;
 0
 [GraficoTransicion]
 [Version GraficoTransicion]
 0
-695 338 521 338 2
+417 500 304 500 2
 [FinGraficoTransicion]
-ObsTDetected
-EDROOMEdge
-OBorde
-CalculatePath
+ToStandBy
+Pause
+OSubEst
+StandBy
 DSubEst
-FReplanning();
+;
 [Trigger]
-PathPlannerCtrl
-SMarkObstacle
+Timer
+EDROOMSignalTimeout
 true
  
  
  
-FMarkObstacle();
+;
 ;
 ;
 0
 [GraficoTransicion]
 [Version GraficoTransicion]
 0
-695 318 521 318 2
+417 351 306 351 2
 [FinGraficoTransicion]
 [VariablesConstantes]
-7
-[Version VariYConst]
-0
-VMaxPathSteps
-TEDROOMUInt8
-8
-Constante
-0
-[Version VariYConst]
-0
-VMinPathSteps
-TEDROOMUInt8
 3
-Constante
-0
 [Version VariYConst]
 0
-VNextPath
+VCurrentPath
 CDPath
 
 Variable
 0
 [Version VariYConst]
 0
-VNextStepStartPoing
-CDLocation
-
+VCurrentPathStep
+TEDROOMUInt8
+0
 Variable
 0
 [Version VariYConst]
 0
 VSimError
 TEDROOMUInt8
-1
-Variable
-0
-[Version VariYConst]
-0
-VTargetLocation
-CDLocation
-
-Variable
-0
-[Version VariYConst]
-0
-VVehicleHalted
-TEDROOMBool
-true
+2
 Variable
 0
 [Metodos]
-12
+8
 [Version Metodos]
 21
-BasicAction
-FCalPathStep()
-0
-0
-0
-0
-0
-9
-{
-		print_char('s');
- 
- 		VNextPath.pathLocations[VNextPath.pathSteps]
-					=calNextPathStep(VNextStepStartPoing, VTargetLocation);
- 
-		VNextPath.pathSteps++;
- 
-}
-BasicAction
-FConfigPlanner()
-0
-0
-0
-0
-0
-7
-{
- 
-	VTargetLocation = *(CDLocation *)Msg->data;
- 
-	
- 
-}
 MsgDataHandler
-FMarkObstacle()
+FGetNewPatch()
 0
 0
 0
 0
 1
  
-4
+6
 	
 		// Data access
  
-  markObstacle(varSMarkObstacle);
+	VCurrentPath = varSTrackPath;
+ 
+ 	VCurrentPathStep=0;
 [ServiceRequest]
 Msg->data
-PathPlannerCtrl
-SMarkObstacle
-CDLocation
-EDROOMprioNormal
+TrackPath
+STrackPath
+CDPath
+EDROOMprioVeryHigh
 BasicAction
-FMaxSteps()
+FGoToPathStep()
 0
 0
 0
 0
 0
-8
+11
 {
- 
  print_char('\n');
  print_char('\r');
- print_string("\tMAX");
+ print_char('+');
+ print_uint8(VCurrentPathStep);
  
+ actuators_go_to_location(VCurrentPath.pathLocations[VCurrentPathStep]);
+ 
+ VCurrentPathStep++;
  
 }
-MsgDataHandler
-FNewTarget()
-0
-0
-0
-0
-1
- 
-11
-	
-		// Data acces
- 
-	VTargetLocation = varSNewTargetLocation;
- 
-	VVehicleHalted=true;	
-	actuators_halt();
- 
-	VNextStepStartPoing=sensors_get_current_location();
- 
-	VNextPath.pathSteps=0;
-[ServiceRequest]
-Msg->data
-PathPlannerCtrl
-SNewTargetLocation
-CDLocation
-EDROOMprioNormal
 Inform
-FProgNextStep()
+FProgFirstTrackStep()
 0
 0
 0
@@ -609,46 +526,44 @@ FProgNextStep()
 	 
 	//Timing Service useful methods
 	 
-   interval = Pr_Time(0,100000); // interval of X sec + Y microsec
+ interval = Pr_Time(0,10000); // interval of X sec + Y microsec
 [ServiceRequest]
 InformIn
 Timer
 EDROOMSignalTimeout
-CDPath
-EDROOMprioVeryHigh
-BasicAction
-FReplanning()
-0
-0
-0
-0
-0
-8
-{
- 
-   VVehicleHalted=true;
- 
-   VNextStepStartPoing=sensors_get_current_location();
-   VNextPath.pathSteps=0;
- 
-}
-ReplyMsg
-FReplyConfigOK()
+NULL
+EDROOMprioNormal
+Inform
+FProgNextTrackStep()
 0
 0
 0
 0
 1
  
-5
-  VNextStepStartPoing=sensors_get_current_location();
+4
+	 
+	//Timing Service useful methods
+	 
+  interval = Pr_Time(0,400000); // interval of X sec + Y microsec
+[ServiceRequest]
+InformIn
+Timer
+EDROOMSignalTimeout
+NULL
+EDROOMprioVeryHigh
+ReplyMsg
+FReplyOK()
+0
+0
+0
+0
+1
  
-  VVehicleHalted=true;	
-		
-  VNextPath.pathSteps=0;
+0
 [ServiceRequest]
 Msg->reply
-PathPlannerCtrl
+PathTrackerCtrl
 SConfigOK
 NULL
 EDROOMprioVeryHigh
@@ -663,66 +578,41 @@ FReplySimError()
 3
  
  
- VSimError--;
+  VSimError--;
 [ServiceRequest]
 Msg->reply
-PathPlannerCtrl
+PathTrackerCtrl
 SConfigError
 NULL
 EDROOMprioVeryHigh
 SendMsg
-FSendNextPath()
+FSendPathRequest()
 0
 0
 0
 0
 1
  
-11
-	
-		// Complete Data 
-	
-	*pSTrackPath_Data=VNextPath;
- 
-	VVehicleHalted=false;	
- 
-	VNextPath.pathSteps=0;
- 
- 	printf("\n\rx");
- 
+0
 [ServiceRequest]
 send
 TrackPath
-STrackPath
-CDPath
+SPathRequest
+NULL
 EDROOMprioNormal
 Guard
-GMaxSteps()
+GLastStep()
 0
 0
 0
 0
 0
-7
+8
 {
  
- 
- return (VNextPath.pathSteps==VMaxPathSteps);
- 
- 
-}
-Guard
-GSendMinPath()
-0
-0
-0
-0
-0
-7
-{
+	return (VCurrentPathStep>=VCurrentPath.pathSteps);
  
  
- 	return ((VVehicleHalted)&&(VNextPath.pathSteps>=VMinPathSteps));
  
  
 }

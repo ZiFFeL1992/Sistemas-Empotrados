@@ -67,7 +67,7 @@ Timer
 EDROOMTimingSAP
 [FinPuertos]
 [ActoresComponente]
-2
+3
 [Version Actor Componente]
 2
 PathPlanner
@@ -102,9 +102,26 @@ EDROOMprioNormal
 81.25
 85.6263
 CAPathTracker
+[Version Actor Componente]
+2
+AvoidObstacles
+1
+0
+0
+10
+7
+EDROOMprioNormal
+
+[Version Grafico Actor Componente]
+0
+16.2109
+34.0862
+33.7891
+56.6735
+CCAvoidObstacles
 [FinActoresComponente]
 [Uniones]
-3
+4
 [Version Union]
 0
 Union2
@@ -129,6 +146,14 @@ TrackPath
 TrackPath
 PathPlanner
 PathTracker
+[Version Union]
+0
+Union
+1
+AvoidObstaclesSysCtrl
+AvoidObstaclesSysCtrl
+AvoidObstacles
+this
 [FinUniones]
 [NumTimers]
 2

@@ -14,7 +14,7 @@ STrackPath
 [Version Dato]
 1
 CDPath
-Z:\home\user\Desktop\Models\Prac7_Vehicle\
+Z:\home\guille\Documents\Sistemas-Empotrados\EDROOM\Prac7_Vehicle\
 iface
 v1
 0
@@ -27,7 +27,7 @@ SPathRequest
 [Version Dato]
 1
 NULL
-Z:\home\user\Desktop\Models\Prac7_Vehicle\
+Z:\home\guille\Documents\Sistemas-Empotrados\EDROOM\Prac7_Vehicle\
 es.uah.aut.srg.edroom.mclev.data_sai.NULL
 v1
 0
